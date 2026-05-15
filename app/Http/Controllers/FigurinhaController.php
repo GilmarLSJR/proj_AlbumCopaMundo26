@@ -22,7 +22,7 @@ class FigurinhaController extends Controller
      */
     public function create()
     {
-        //
+        return view('figurinhas.create');
     }
 
     /**
@@ -30,7 +30,22 @@ class FigurinhaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'pais' => 'required|string|max:100',
+            'numero' => 'required|integer|unique:figurinhas,numero',
+            'time' => 'required|string|max:100',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('imagem')) {
+            $path = $request->file('imagem')->store('figurinhas', 'public');
+            $validated['imagem'] = $path;
+        }
+
+        Figurinha::create($validated);
+
+        return redirect()->route('figurinhas.index')->with('success', 'Figurinha cadastrada com sucesso!');
     }
 
     /**
@@ -46,7 +61,8 @@ class FigurinhaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $figurinha = Figurinha::findOrFail($id);
+        return view('figurinhas.edit', compact('figurinha'));
     }
 
     /**
@@ -54,7 +70,27 @@ class FigurinhaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $figurinha = Figurinha::findOrFail($id);
+
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'pais' => 'required|string|max:100',
+            'numero' => 'required|integer|unique:figurinhas,numero,' . $id,
+            'time' => 'required|string|max:100',
+            'imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if ($request->hasFile('imagem')) {
+            if ($figurinha->imagem) {
+                \Storage::disk('public')->delete($figurinha->imagem);
+            }
+            $path = $request->file('imagem')->store('figurinhas', 'public');
+            $validated['imagem'] = $path;
+        }
+
+        $figurinha->update($validated);
+
+        return redirect()->route('figurinhas.index')->with('success', 'Figurinha atualizada com sucesso!');
     }
 
     /**
@@ -62,6 +98,14 @@ class FigurinhaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $figurinha = Figurinha::findOrFail($id);
+
+        if ($figurinha->imagem) {
+            \Storage::disk('public')->delete($figurinha->imagem);
+        }
+
+        $figurinha->delete();
+
+        return redirect()->route('figurinhas.index')->with('success', 'Figurinha excluída com sucesso!');
     }
 }
