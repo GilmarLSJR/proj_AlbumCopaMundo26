@@ -214,6 +214,10 @@
                 @forelse ($figurinhas as $figurinha)
                     <tr>
                         <td>{{ $figurinha->id }}</td>
+                        <td>{{ $figurinha->nome }}</td>
+                        <td>{{ $figurinha->pais }}</td>
+                        <td>{{ $figurinha->numero }}</td>
+                        <td>{{ $figurinha->time }}</td>
                         <td>
                             @if ($figurinha->imagem)
                                 <img src="{{ asset('storage/' . $figurinha->imagem) }}" alt="{{ $figurinha->nome }}">
@@ -221,10 +225,6 @@
                                 <span class="placeholder">sem imagem</span>
                             @endif
                         </td>
-                        <td>{{ $figurinha->nome }}</td>
-                        <td>{{ $figurinha->pais }}</td>
-                        <td>{{ $figurinha->numero }}</td>
-                        <td>{{ $figurinha->time }}</td>
                         <td>
                             <div class="actions">
                                 <a href="{{ route('figurinhas.edit', $figurinha) }}" class="edit">Editar</a>

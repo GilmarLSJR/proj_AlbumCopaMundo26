@@ -240,8 +240,6 @@
             </div>
 
             <div class="form-group {{ $errors->has('imagem') ? 'error' : '' }}">
-                <label>Imagem</label>
-
                 @if ($figurinha->imagem)
                     <div class="current-image-wrapper">
                         <span class="current-image-label">Imagem Atual:</span>
@@ -250,7 +248,7 @@
                     </div>
                 @endif
 
-                <label for="imagem">Alterar Imagem</label>
+                <label for="imagem">Imagem <span class="required">*</span></label>
                 <input type="file" id="imagem" name="imagem" accept="image/jpeg,image/png,image/jpg,image/gif">
                 <div class="help-text">Formatos aceitos: JPEG, PNG, JPG, GIF (máx. 2MB). Deixe em branco para manter a
                     imagem atual.</div>
